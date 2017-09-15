@@ -31,7 +31,6 @@ public class InhibitionControl {
     private static final int WAIT_OUT = 1000;
 
     private List<ImageView> imageViews = new ArrayList<>();
-    private List<Long> begins = new ArrayList<>();
     private long end;
 
     private List<Double> starsTime = new ArrayList<>();
@@ -106,31 +105,34 @@ public class InhibitionControl {
     /**
      * Adds a figure to the anchorpane
      */
-    private void addFigure(String figure) {
-        ImageView imageView = new ImageView(figure);
+    private void addFigure(String figurePath) {
+        ImageView imageView = new ImageView(figurePath);
+
+        Figure figure = new Figure(figureSize(), figureLocation_x(), figureLocation_y(), System.nanoTime(), figurePath);
 
         //definition of the size
-        double size = figureSize();
+        double size = figure.getSize();
         imageView.setFitHeight(size);
         imageView.setFitWidth(size);
 
         imageViews.add(imageView);
-        begins.add(System.nanoTime());
 
         imageView.setOnMouseClicked(event -> {
-            end = System.nanoTime();
-            double time = (end - begins.get(imageViews.indexOf(imageView)));
+
+            figure.setDestruction(System.nanoTime());
+            double time = figure.lifespan();
             time /= 1000000000;
-            if (figure.equals(SQUARE)) squaresTime.add(time);
-            else if (figure.equals(STAR)) starsTime.add(time);
+
+            if (figure.getType().equals(SQUARE)) squaresTime.add(time);
+            else if (figure.getType().equals(STAR)) starsTime.add(time);
 
             anchorP.getChildren().remove(imageView);
         });
         anchorP.getChildren().add(imageView);
 
         //determination of the location of the figure
-        anchorP.setTopAnchor(imageView, figureLocation_y());
-        anchorP.setLeftAnchor(imageView, figureLocation_x());
+        anchorP.setTopAnchor(imageView, figure.getLocation_y());
+        anchorP.setLeftAnchor(imageView, figure.getLocation_x());
     }
 
     /**
