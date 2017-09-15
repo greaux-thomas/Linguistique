@@ -103,24 +103,6 @@ public class InhibitionControl {
         th.start();
     }
 
-    private void printResults() {
-
-        try {
-            printWriter = new PrintWriter(FILENAME);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return;
-        }
-
-        printWriter.println("Stars:");
-        stats(starsTime);
-
-        printWriter.println("\nSquares:");
-        stats(squaresTime);
-
-        printWriter.close();
-    }
-
     /**
      * Adds a figure to the anchorpane
      */
@@ -176,6 +158,27 @@ public class InhibitionControl {
         double coin = random.nextDouble();
         if (coin > 0.5) delta *= -1;
         return SIZE + delta;
+    }
+
+    /**
+     * Print the results in the result file
+     */
+    private void printResults() {
+
+        try {
+            printWriter = new PrintWriter(FILENAME);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        printWriter.println("Stars:");
+        stats(starsTime);
+
+        printWriter.println("\nSquares:");
+        stats(squaresTime);
+
+        printWriter.close();
     }
 
     /**
