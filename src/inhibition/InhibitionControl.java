@@ -42,12 +42,33 @@ public class InhibitionControl {
 
     @FXML
     private Label testL;
+    @FXML
+    private Label firstTestL;
+    @FXML
+    private Label secondTestL;
+    @FXML
+    private Label thirdTestL;
+    @FXML
+    private Label inhibitionTestL;
 
     @FXML
     public void initialize() {
         testL.setOnMouseClicked(event -> {
             anchorP.getChildren().remove(testL);
             inhibitionTest();
+        });
+
+        firstTestL.setOnMouseClicked(event -> {
+            System.out.println("Clicked on 1st mini test");
+        });
+        secondTestL.setOnMouseClicked(event -> {
+            System.out.println("Clicked on 2nd mini test");
+        });
+        thirdTestL.setOnMouseClicked(event -> {
+            System.out.println("Clicked on 3rd mini test");
+        });
+        inhibitionTestL.setOnMouseClicked(event -> {
+            System.out.println("Clicked on inhibition mini test");
         });
     }
 

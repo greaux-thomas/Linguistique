@@ -2,11 +2,36 @@
 
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
 <VBox prefHeight="576.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inhibition.InhibitionControl">
    <children>
       <fx:include source="../../fxml/goHome.fxml" />
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+         <children>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label fx:id="firstTestL" text="1st mini test" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label fx:id="secondTestL" text="2nd mini test" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label fx:id="thirdTestL" text="3rd mini test" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label fx:id="inhibitionTestL" text="inhibitino test" />
+               </children>
+            </HBox>
+         </children>
+      </HBox>
       <AnchorPane fx:id="anchorP" prefHeight="900.0" prefWidth="1600.0">
          <children>
             <Label fx:id="testL" layoutX="482.0" layoutY="267.0" text="Start test" />
