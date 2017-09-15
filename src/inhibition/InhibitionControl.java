@@ -59,16 +59,18 @@ public class InhibitionControl {
         });
 
         firstTestL.setOnMouseClicked(event -> {
-            System.out.println("Clicked on 1st mini test");
+            testL.setText("Start 1st mini test");
+            anchorP.getChildren().remove(testL);
         });
         secondTestL.setOnMouseClicked(event -> {
-            System.out.println("Clicked on 2nd mini test");
+            testL.setText("Start 2nd mini test");
+            anchorP.getChildren().add(testL);
         });
         thirdTestL.setOnMouseClicked(event -> {
-            System.out.println("Clicked on 3rd mini test");
+            testL.setText("Start 3rd mini test");
         });
         inhibitionTestL.setOnMouseClicked(event -> {
-            System.out.println("Clicked on inhibition mini test");
+            testL.setText("Start inhibition test");
         });
     }
 
