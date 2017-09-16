@@ -214,8 +214,9 @@ public class InhibitionControl {
     private void printResults() {
 
         try {
-            printWriter = new PrintWriter(FILENAME);
-        } catch (FileNotFoundException e) {
+            FileWriter temp = new FileWriter(FILENAME, true);
+            printWriter = new PrintWriter(temp);
+        } catch (java.io.IOException e) {
             e.printStackTrace();
             return;
         }
