@@ -221,12 +221,16 @@ public class InhibitionControl {
             return;
         }
 
+        printWriter.println("\n\n");
+
         printWriter.println("Stars:");
         stats(starsTime);
 
-        printWriter.println("\nSquares:");
+        printWriter.println("\n\nSquares:");
         stats(squaresTime);
 
+        printWriter.println("\n\n");
+        printWriter.println("\n#####");
         printWriter.close();
     }
 
