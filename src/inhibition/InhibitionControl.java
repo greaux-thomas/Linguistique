@@ -2,12 +2,15 @@ package inhibition;
 
 import javafx.application.Platform;
 import javafx.concurrent.Task;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,10 +31,9 @@ public class InhibitionControl {
 
     private static final int NB_FIGURE = 20;
     private static final int RATE = 1000;
-    private static final int WAIT_OUT = 1000;
+    private static final int WAIT_OUT = 4000;
 
     private List<ImageView> imageViews = new ArrayList<>();
-    private long end;
 
     private List<Double> starsTime = new ArrayList<>();
     private List<Double> squaresTime = new ArrayList<>();
@@ -53,24 +55,68 @@ public class InhibitionControl {
     @FXML
     public void initialize() {
         testL.setOnMouseClicked(event -> {
-            anchorP.getChildren().remove(testL);
-            inhibitionTest();
+            System.out.println("No test selected");
         });
 
         firstTestL.setOnMouseClicked(event -> {
-            testL.setText("Start 1st mini test");
-            anchorP.getChildren().remove(testL);
+            testL.setText("Start first mini test");
+            testL.setOnMouseClicked(event1 -> {
+                anchorP.getChildren().remove(testL);
+                firstMiniTest();
+            });
         });
+
         secondTestL.setOnMouseClicked(event -> {
             testL.setText("Start 2nd mini test");
             anchorP.getChildren().add(testL);
         });
+
         thirdTestL.setOnMouseClicked(event -> {
             testL.setText("Start 3rd mini test");
         });
+
         inhibitionTestL.setOnMouseClicked(event -> {
             testL.setText("Start inhibition test");
+            testL.setOnMouseClicked(event1 -> {
+                anchorP.getChildren().remove(testL);
+                inhibitionTest();
+            });
         });
+    }
+
+    /**
+     * Runs the inhibition test
+     */
+    private void firstMiniTest() {
+        Task task = new Task<Void>() {
+            @Override
+            public Void call() throws Exception {
+                Platform.runLater(() -> {
+                    addFigure(SQUARE);
+                    addFigure(STAR);
+                });
+
+                Thread.sleep(WAIT_OUT);
+                printResults();
+                Platform.runLater(() -> cleanUp());
+                return null;
+            }
+        };
+        Thread th = new Thread(task);
+        th.setDaemon(true);
+        th.start();
+    }
+
+    private void cleanUp() {
+        anchorP.getChildren().remove(0, anchorP.getChildren().size());
+
+        testL.setText("Test over");
+        testL.setOnMouseClicked(event -> {});
+        anchorP.getChildren().add(testL);
+
+        starsTime.clear();
+        squaresTime.clear();
+        imageViews.clear();
     }
 
     /**
@@ -91,7 +137,7 @@ public class InhibitionControl {
                 }
 
                 Thread.sleep(WAIT_OUT);
-
+                Platform.runLater(() -> cleanUp());
                 printResults();
 
                 return null;
