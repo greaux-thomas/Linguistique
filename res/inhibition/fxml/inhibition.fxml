@@ -27,14 +27,14 @@
             </HBox>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
                <children>
-                  <Label fx:id="inhibitionTestL" text="inhibitino test" />
+                  <Label fx:id="inhibitionTestL" text="inhibition test" />
                </children>
             </HBox>
          </children>
       </HBox>
       <AnchorPane fx:id="anchorP" prefHeight="900.0" prefWidth="1600.0">
          <children>
-            <Label fx:id="testL" layoutX="482.0" layoutY="267.0" text="Start test" />
+            <Label fx:id="testL" layoutX="469.0" layoutY="263.0" text="No test selected" />
          </children></AnchorPane>
    </children>
 </VBox>
