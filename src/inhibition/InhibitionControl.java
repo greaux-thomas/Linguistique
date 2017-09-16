@@ -55,7 +55,6 @@ public class InhibitionControl {
     @FXML
     public void initialize() {
         testL.setOnMouseClicked(event -> {
-            System.out.println("No test selected");
         });
 
         firstTestL.setOnMouseClicked(event -> {
@@ -68,11 +67,18 @@ public class InhibitionControl {
 
         secondTestL.setOnMouseClicked(event -> {
             testL.setText("Start 2nd mini test");
-            anchorP.getChildren().add(testL);
+            testL.setOnMouseClicked(event1 -> {
+                anchorP.getChildren().remove(testL);
+                secondMiniTest();
+            });
         });
 
         thirdTestL.setOnMouseClicked(event -> {
-            testL.setText("Start 3rd mini test");
+            testL.setText("Start third mini test");
+            testL.setOnMouseClicked(event1 -> {
+                anchorP.getChildren().remove(testL);
+                thirdMiniTest();
+            });
         });
 
         inhibitionTestL.setOnMouseClicked(event -> {
@@ -85,7 +91,7 @@ public class InhibitionControl {
     }
 
     /**
-     * Runs the inhibition test
+     * Runs the first mini test
      */
     private void firstMiniTest() {
         Task task = new Task<Void>() {
@@ -117,6 +123,63 @@ public class InhibitionControl {
         starsTime.clear();
         squaresTime.clear();
         imageViews.clear();
+    }
+
+    /**
+     * Runs the second mini test
+     */
+    private void secondMiniTest() {
+        Task task = new Task<Void>() {
+            @Override
+            public Void call() throws Exception {
+                for (int i = 0; i < NB_FIGURE/4; i++) {
+                    Platform.runLater(() -> {
+                        Random random = new Random();
+                        double coin = random.nextDouble();
+                        if (coin <= 0.5) addFigure(SQUARE);
+                        else addFigure(STAR);
+                    });
+                }
+
+                Thread.sleep(WAIT_OUT*2);
+                Platform.runLater(() -> cleanUp());
+                printResults();
+
+                return null;
+            }
+        };
+        Thread th = new Thread(task);
+        th.setDaemon(true);
+        th.start();
+    }
+
+    /**
+     * Runs the third mini test
+     */
+    private void thirdMiniTest() {
+        Task task = new Task<Void>() {
+            @Override
+            public Void call() throws Exception {
+                for (int i = 0; i < NB_FIGURE/4; i++) {
+                    Platform.runLater(() -> {
+                        Random random = new Random();
+                        double coin = random.nextDouble();
+                        if (coin <= 0.5) addFigure(SQUARE);
+                        else addFigure(STAR);
+                    });
+                    Thread.sleep(RATE);
+                }
+
+                Thread.sleep(WAIT_OUT);
+                Platform.runLater(() -> cleanUp());
+                printResults();
+
+                return null;
+            }
+        };
+        Thread th = new Thread(task);
+        th.setDaemon(true);
+        th.start();
     }
 
     /**
