@@ -142,8 +142,8 @@ public class InhibitionControl {
                 }
 
                 Thread.sleep(WAIT_OUT*2);
-                Platform.runLater(() -> cleanUp());
                 printResults();
+                Platform.runLater(() -> cleanUp());
 
                 return null;
             }
@@ -171,8 +171,8 @@ public class InhibitionControl {
                 }
 
                 Thread.sleep(WAIT_OUT);
-                Platform.runLater(() -> cleanUp());
                 printResults();
+                Platform.runLater(() -> cleanUp());
 
                 return null;
             }
@@ -200,8 +200,8 @@ public class InhibitionControl {
                 }
 
                 Thread.sleep(WAIT_OUT);
-                Platform.runLater(() -> cleanUp());
                 printResults();
+                Platform.runLater(() -> cleanUp());
 
                 return null;
             }
@@ -323,6 +323,12 @@ public class InhibitionControl {
         }
         std_dev /= list.size();
         std_dev = Math.sqrt(std_dev);
+
+        min = (double) Math.round(min *100) / 100;
+        max = (double) Math.round(max *100) / 100;
+        med  = (double) Math.round(med *100) / 100;
+        avg = (double) Math.round(avg *100) / 100;
+        std_dev = (double) Math.round(std_dev *100) / 100;
 
         printWriter.println("number of elements: " + list.size());
         printWriter.println("min = " + min);
