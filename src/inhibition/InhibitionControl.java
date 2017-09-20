@@ -2,14 +2,11 @@ package inhibition;
 
 import javafx.application.Platform;
 import javafx.concurrent.Task;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -29,10 +26,12 @@ public class InhibitionControl {
     private static final double SIZE = 75.0;
     private static final double DELTA_SIZE = 40;
 
-    private static final int NB_FIGURE = 20;
     private static final int RATE = 1000;
     private static final int WAIT_OUT = 4000;
 
+    private static int index = 0;
+
+    private List<Figure> figures = new ArrayList<>();
     private List<ImageView> imageViews = new ArrayList<>();
 
     private List<Double> starsTime = new ArrayList<>();
@@ -97,9 +96,10 @@ public class InhibitionControl {
         Task task = new Task<Void>() {
             @Override
             public Void call() throws Exception {
+                generateFigures(1, 1);
                 Platform.runLater(() -> {
-                    addFigure(SQUARE);
-                    addFigure(STAR);
+                    addFigure();
+                    addFigure();
                 });
 
                 Thread.sleep(WAIT_OUT);
@@ -114,10 +114,14 @@ public class InhibitionControl {
     }
 
     private void cleanUp() {
+        figures.clear();
+        index = 0;
+
         anchorP.getChildren().remove(0, anchorP.getChildren().size());
 
         testL.setText("Test over");
-        testL.setOnMouseClicked(event -> {});
+        testL.setOnMouseClicked(event -> {
+        });
         anchorP.getChildren().add(testL);
 
         starsTime.clear();
@@ -128,20 +132,17 @@ public class InhibitionControl {
     /**
      * Runs the second mini test
      */
+
     private void secondMiniTest() {
         Task task = new Task<Void>() {
             @Override
             public Void call() throws Exception {
-                for (int i = 0; i < NB_FIGURE/4; i++) {
-                    Platform.runLater(() -> {
-                        Random random = new Random();
-                        double coin = random.nextDouble();
-                        if (coin <= 0.5) addFigure(SQUARE);
-                        else addFigure(STAR);
-                    });
+                generateFigures(3, 2);
+                for (int i = 0; i < 5; i++) {
+                    Platform.runLater(() -> addFigure());
                 }
 
-                Thread.sleep(WAIT_OUT*2);
+                Thread.sleep(WAIT_OUT * 2);
                 printResults();
                 Platform.runLater(() -> cleanUp());
 
@@ -153,20 +154,18 @@ public class InhibitionControl {
         th.start();
     }
 
+
     /**
      * Runs the third mini test
      */
+
     private void thirdMiniTest() {
         Task task = new Task<Void>() {
             @Override
             public Void call() throws Exception {
-                for (int i = 0; i < NB_FIGURE/4; i++) {
-                    Platform.runLater(() -> {
-                        Random random = new Random();
-                        double coin = random.nextDouble();
-                        if (coin <= 0.5) addFigure(SQUARE);
-                        else addFigure(STAR);
-                    });
+                generateFigures(3, 2);
+                for (int i = 0; i < 5; i++) {
+                    Platform.runLater(() -> addFigure());
                     Thread.sleep(RATE);
                 }
 
@@ -181,6 +180,7 @@ public class InhibitionControl {
         th.setDaemon(true);
         th.start();
     }
+
 
     /**
      * Runs the inhibition test
@@ -189,13 +189,9 @@ public class InhibitionControl {
         Task task = new Task<Void>() {
             @Override
             public Void call() throws Exception {
-                for (int i = 0; i < NB_FIGURE; i++) {
-                    Platform.runLater(() -> {
-                        Random random = new Random();
-                        double coin = random.nextDouble();
-                        if (coin <= 0.5) addFigure(SQUARE);
-                        else addFigure(STAR);
-                    });
+                generateFigures(10, 10);
+                for (int i = 0; i < figures.size() - 1; i++) {
+                    Platform.runLater(() -> addFigure());
                     Thread.sleep(RATE);
                 }
 
@@ -211,16 +207,29 @@ public class InhibitionControl {
         th.start();
     }
 
+    private void generateFigures(int squares, int stars) {
+
+        for (int i = 0; i < squares; i++) {
+            figures.add(new Figure(figureSize(), figureLocation_x(), figureLocation_y(), System.nanoTime(), SQUARE));
+        }
+
+        for (int i = 0; i < stars; i++) {
+            figures.add(new Figure(figureSize(), figureLocation_x(), figureLocation_y(), System.nanoTime(), STAR));
+        }
+
+        Collections.shuffle(figures);
+    }
+
     /**
      * Adds a figure to the anchorpane
      */
-    private void addFigure(String figurePath) {
-        ImageView imageView = new ImageView(figurePath);
+    private void addFigure() {
+        int indexLocal = index;
 
-        Figure figure = new Figure(figureSize(), figureLocation_x(), figureLocation_y(), System.nanoTime(), figurePath);
+        ImageView imageView = new ImageView(figures.get(indexLocal).getType());
 
         //definition of the size
-        double size = figure.getSize();
+        double size = figures.get(indexLocal).getSize();
         imageView.setFitHeight(size);
         imageView.setFitWidth(size);
 
@@ -228,20 +237,22 @@ public class InhibitionControl {
 
         imageView.setOnMouseClicked(event -> {
 
-            figure.setDestruction(System.nanoTime());
-            double time = figure.lifespan();
+            figures.get(indexLocal).setDestruction(System.nanoTime());
+            double time = figures.get(indexLocal).lifespan();
             time /= 1000000000;
 
-            if (figure.getType().equals(SQUARE)) squaresTime.add(time);
-            else if (figure.getType().equals(STAR)) starsTime.add(time);
+            if (figures.get(indexLocal).getType().equals(SQUARE)) squaresTime.add(time);
+            else if (figures.get(indexLocal).getType().equals(STAR)) starsTime.add(time);
 
             anchorP.getChildren().remove(imageView);
         });
         anchorP.getChildren().add(imageView);
 
         //determination of the location of the figure
-        anchorP.setTopAnchor(imageView, figure.getLocation_y());
-        anchorP.setLeftAnchor(imageView, figure.getLocation_x());
+        anchorP.setTopAnchor(imageView, figures.get(index).getLocation_y());
+        anchorP.setLeftAnchor(imageView, figures.get(index).getLocation_x());
+
+        index++;
     }
 
     /**
@@ -324,11 +335,11 @@ public class InhibitionControl {
         std_dev /= list.size();
         std_dev = Math.sqrt(std_dev);
 
-        min = (double) Math.round(min *100) / 100;
-        max = (double) Math.round(max *100) / 100;
-        med  = (double) Math.round(med *100) / 100;
-        avg = (double) Math.round(avg *100) / 100;
-        std_dev = (double) Math.round(std_dev *100) / 100;
+        min = (double) Math.round(min * 100) / 100;
+        max = (double) Math.round(max * 100) / 100;
+        med = (double) Math.round(med * 100) / 100;
+        avg = (double) Math.round(avg * 100) / 100;
+        std_dev = (double) Math.round(std_dev * 100) / 100;
 
         printWriter.println("number of elements: " + list.size());
         printWriter.println("min = " + min);
