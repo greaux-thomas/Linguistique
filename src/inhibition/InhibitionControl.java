@@ -1,5 +1,7 @@
 package inhibition;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -7,8 +9,6 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 
-import java.io.FileWriter;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -25,6 +25,7 @@ public class InhibitionControl {
     private static final double DELTA_SIZE = 40;
 
     private static final int RATE = 1000;
+    private static final int LIFESPAN = 3000;
     private static final int WAIT_OUT = 4000;
 
     private static int index = 0;
@@ -119,7 +120,7 @@ public class InhibitionControl {
             @Override
             public Void call() throws Exception {
                 int nb_fig = 6;
-                generateFigures(nb_fig/2, nb_fig/2);
+                generateFigures(nb_fig / 2, nb_fig / 2);
                 for (int i = 0; i < nb_fig; i++) {
                     Platform.runLater(() -> addFigure());
                 }
@@ -146,7 +147,7 @@ public class InhibitionControl {
             @Override
             public Void call() throws Exception {
                 int nb_fig = 6;
-                generateFigures(nb_fig/2, nb_fig/2);
+                generateFigures(nb_fig / 2, nb_fig / 2);
                 for (int i = 0; i < nb_fig; i++) {
                     Platform.runLater(() -> addFigure());
                     Thread.sleep(RATE);
@@ -173,7 +174,7 @@ public class InhibitionControl {
             @Override
             public Void call() throws Exception {
                 int nb_fig = 20;
-                generateFigures(nb_fig/2, nb_fig/2);
+                generateFigures(nb_fig / 2, nb_fig / 2);
                 for (int i = 0; i < figures.size() - 1; i++) {
                     Platform.runLater(() -> addFigure());
                     Thread.sleep(RATE);
@@ -248,6 +249,17 @@ public class InhibitionControl {
         });
 
         figures.get(indexLocal).setCreation(System.nanoTime());
+
+
+        //Setup destruction if the figure is not clicked
+        Timeline timeline = new Timeline(new KeyFrame(
+                javafx.util.Duration.millis(LIFESPAN),
+                ae -> {
+                    if (anchorP.getChildren().contains(imageView)) {
+                        anchorP.getChildren().remove(imageView);
+                    }
+                }));
+        timeline.play();
 
         anchorP.getChildren().add(imageView);
 
