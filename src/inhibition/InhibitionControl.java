@@ -30,7 +30,6 @@ public class InhibitionControl {
     private static int index = 0;
 
     private List<Figure> figures = new ArrayList<>();
-    private List<ImageView> imageViews = new ArrayList<>();
 
     private List<Double> starsTime = new ArrayList<>();
     private List<Double> squaresTime = new ArrayList<>();
@@ -208,7 +207,6 @@ public class InhibitionControl {
 
         starsTime.clear();
         squaresTime.clear();
-        imageViews.clear();
     }
 
     private void generateFigures(int squares, int stars) {
@@ -236,8 +234,6 @@ public class InhibitionControl {
         double size = figures.get(indexLocal).getSize();
         imageView.setFitHeight(size);
         imageView.setFitWidth(size);
-
-        imageViews.add(imageView);
 
         imageView.setOnMouseClicked(event -> {
 
