@@ -137,8 +137,9 @@ public class InhibitionControl {
         Task task = new Task<Void>() {
             @Override
             public Void call() throws Exception {
-                generateFigures(3, 2);
-                for (int i = 0; i < 5; i++) {
+                int nb_fig = 6;
+                generateFigures(nb_fig/2, nb_fig/2);
+                for (int i = 0; i < nb_fig; i++) {
                     Platform.runLater(() -> addFigure());
                 }
 
@@ -163,8 +164,9 @@ public class InhibitionControl {
         Task task = new Task<Void>() {
             @Override
             public Void call() throws Exception {
-                generateFigures(3, 2);
-                for (int i = 0; i < 5; i++) {
+                int nb_fig = 6;
+                generateFigures(nb_fig/2, nb_fig/2);
+                for (int i = 0; i < nb_fig; i++) {
                     Platform.runLater(() -> addFigure());
                     Thread.sleep(RATE);
                 }
@@ -189,7 +191,8 @@ public class InhibitionControl {
         Task task = new Task<Void>() {
             @Override
             public Void call() throws Exception {
-                generateFigures(10, 10);
+                int nb_fig = 20;
+                generateFigures(nb_fig/2, nb_fig/2);
                 for (int i = 0; i < figures.size() - 1; i++) {
                     Platform.runLater(() -> addFigure());
                     Thread.sleep(RATE);
@@ -210,11 +213,11 @@ public class InhibitionControl {
     private void generateFigures(int squares, int stars) {
 
         for (int i = 0; i < squares; i++) {
-            figures.add(new Figure(figureSize(), figureLocation_x(), figureLocation_y(), System.nanoTime(), SQUARE));
+            figures.add(new Figure(figureSize(), figureLocation_x(), figureLocation_y(), SQUARE));
         }
 
         for (int i = 0; i < stars; i++) {
-            figures.add(new Figure(figureSize(), figureLocation_x(), figureLocation_y(), System.nanoTime(), STAR));
+            figures.add(new Figure(figureSize(), figureLocation_x(), figureLocation_y(), STAR));
         }
 
         Collections.shuffle(figures);
@@ -246,6 +249,9 @@ public class InhibitionControl {
 
             anchorP.getChildren().remove(imageView);
         });
+
+        figures.get(indexLocal).setCreation(System.nanoTime());
+
         anchorP.getChildren().add(imageView);
 
         //determination of the location of the figure

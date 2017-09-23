@@ -11,11 +11,10 @@ public class Figure {
     private long destruction;
     private String type;
 
-    public Figure(double size, double location_x, double location_y, long creation, String type) {
+    public Figure(double size, double location_x, double location_y, String type) {
         this.size = size;
         this.location_x = location_x;
         this.location_y = location_y;
-        this.creation = creation;
         this.type = type;
     }
 
@@ -37,6 +36,10 @@ public class Figure {
 
     public double getLocation_y() {
         return location_y;
+    }
+
+    public void setCreation(long creation) {
+        this.creation = creation;
     }
 
     public void setDestruction(long destruction) {
