@@ -26,7 +26,7 @@ public class InhibitionControl {
 
     private static final int RATE = 1000;
     private static final int LIFESPAN = 3000;
-    private static final int WAIT_OUT = 4000;
+    private static final int WAIT_OUT = 3000;
 
     private static int index = 0;
 
@@ -122,7 +122,7 @@ public class InhibitionControl {
                 int nb_fig = 6;
                 generateFigures(nb_fig / 2, nb_fig / 2);
                 for (int i = 0; i < nb_fig; i++) {
-                    Platform.runLater(() -> addFigure());
+                    Platform.runLater(() -> addFigure(false));
                 }
 
                 Thread.sleep(WAIT_OUT * 2);
@@ -226,7 +226,14 @@ public class InhibitionControl {
     /**
      * Adds a figure to the anchorpane
      */
-    private void addFigure() {
+    private void addFigure(){
+        addFigure(true);
+    }
+
+    /**
+     * Adds a figure to the anchorpane
+     */
+    private void addFigure(boolean destruction) {
         int indexLocal = index;
 
         ImageView imageView = new ImageView(figures.get(indexLocal).getType());
@@ -252,14 +259,16 @@ public class InhibitionControl {
 
 
         //Setup destruction if the figure is not clicked
-        Timeline timeline = new Timeline(new KeyFrame(
-                javafx.util.Duration.millis(LIFESPAN),
-                ae -> {
-                    if (anchorP.getChildren().contains(imageView)) {
-                        anchorP.getChildren().remove(imageView);
-                    }
-                }));
-        timeline.play();
+        if(destruction){
+            Timeline timeline = new Timeline(new KeyFrame(
+                    javafx.util.Duration.millis(LIFESPAN),
+                    ae -> {
+                        if (anchorP.getChildren().contains(imageView)) {
+                            anchorP.getChildren().remove(imageView);
+                        }
+                    }));
+            timeline.play();
+        }
 
         anchorP.getChildren().add(imageView);
 
