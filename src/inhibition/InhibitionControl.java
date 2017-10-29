@@ -21,8 +21,8 @@ public class InhibitionControl {
     private static final String SQUARE = "inhibition/pictures/square.jpg";
     private static final String TEDDYBEAR = "inhibition/pictures/TeddyBear.jpg";
 
-    private static final double SIZE = 75.0;
-    private static final double DELTA_SIZE = 40;
+    private static final double SIZE = 115.0;
+    private static final double DELTA_SIZE = 12.5;
 
     private static final int RATE = 1000;
     private static final int LIFESPAN = 3000;
@@ -268,9 +268,7 @@ public class InhibitionControl {
      */
     private double figureSize() {
         Random random = new Random();
-        double delta = random.nextDouble() * DELTA_SIZE;
-        double coin = random.nextDouble();
-        if (coin > 0.5) delta *= -1;
+        double delta = random.nextGaussian() * DELTA_SIZE;
         return SIZE + delta;
     }
 }
