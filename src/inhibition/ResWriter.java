@@ -14,7 +14,7 @@ public class ResWriter {
     /**
      * Print the results in the result file
      */
-    public void printResults(List<Double> starsTime, List<Double> squaresTime) {
+    public void printResults(List<Double> teddyBearTime, List<Double> squaresTime) {
 
         try {
             FileWriter temp = new FileWriter(FILENAME, true);
@@ -27,7 +27,7 @@ public class ResWriter {
         printWriter.println("\n\n");
 
         printWriter.println("Stars:");
-        stats(starsTime);
+        stats(teddyBearTime);
 
         printWriter.println("\n\nSquares:");
         stats(squaresTime);

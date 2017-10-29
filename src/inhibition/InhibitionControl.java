@@ -19,7 +19,7 @@ public class InhibitionControl {
     ResWriter resWriter = new ResWriter();
 
     private static final String SQUARE = "inhibition/pictures/square.jpg";
-    private static final String STAR = "inhibition/pictures/star.png";
+    private static final String TEDDYBEAR = "inhibition/pictures/TeddyBear.jpg";
 
     private static final double SIZE = 75.0;
     private static final double DELTA_SIZE = 40;
@@ -32,7 +32,7 @@ public class InhibitionControl {
 
     private List<Figure> figures = new ArrayList<>();
 
-    private List<Double> starsTime = new ArrayList<>();
+    private List<Double> teddyBearTime = new ArrayList<>();
     private List<Double> squaresTime = new ArrayList<>();
 
     @FXML
@@ -101,7 +101,7 @@ public class InhibitionControl {
                 });
 
                 Thread.sleep(WAIT_OUT);
-                resWriter.printResults(starsTime, squaresTime);
+                resWriter.printResults(teddyBearTime, squaresTime);
                 Platform.runLater(() -> cleanUp());
                 return null;
             }
@@ -126,7 +126,7 @@ public class InhibitionControl {
                 }
 
                 Thread.sleep(WAIT_OUT * 2);
-                resWriter.printResults(starsTime, squaresTime);
+                resWriter.printResults(teddyBearTime, squaresTime);
                 Platform.runLater(() -> cleanUp());
 
                 return null;
@@ -154,7 +154,7 @@ public class InhibitionControl {
                 }
 
                 Thread.sleep(WAIT_OUT);
-                resWriter.printResults(starsTime, squaresTime);
+                resWriter.printResults(teddyBearTime, squaresTime);
                 Platform.runLater(() -> cleanUp());
 
                 return null;
@@ -181,7 +181,7 @@ public class InhibitionControl {
                 }
 
                 Thread.sleep(WAIT_OUT);
-                resWriter.printResults(starsTime, squaresTime);
+                resWriter.printResults(teddyBearTime, squaresTime);
                 Platform.runLater(() -> cleanUp());
 
                 return null;
@@ -206,7 +206,7 @@ public class InhibitionControl {
         });
         anchorP.getChildren().add(testL);
 
-        starsTime.clear();
+        teddyBearTime.clear();
         squaresTime.clear();
     }
 
@@ -217,7 +217,7 @@ public class InhibitionControl {
         }
 
         for (int i = 0; i < stars; i++) {
-            figures.add(new Figure(figureSize(), figureLocation_x(), figureLocation_y(), STAR));
+            figures.add(new Figure(figureSize(), figureLocation_x(), figureLocation_y(), TEDDYBEAR));
         }
 
         Collections.shuffle(figures);
@@ -250,7 +250,7 @@ public class InhibitionControl {
             time /= 1000000000;
 
             if (figures.get(indexLocal).getType().equals(SQUARE)) squaresTime.add(time);
-            else if (figures.get(indexLocal).getType().equals(STAR)) starsTime.add(time);
+            else if (figures.get(indexLocal).getType().equals(TEDDYBEAR)) teddyBearTime.add(time);
 
             anchorP.getChildren().remove(imageView);
         });
