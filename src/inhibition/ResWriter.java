@@ -26,7 +26,7 @@ public class ResWriter {
 
         printWriter.println("\n\n");
 
-        printWriter.println("Stars:");
+        printWriter.println("Teddy Bears:");
         stats(teddyBearTime);
 
         printWriter.println("\n\nSquares:");

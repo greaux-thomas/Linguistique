@@ -30,6 +30,7 @@ public class InhibitionControl {
 
     private static int index = 0;
 
+    private List<Boolean> figuresToGenerate = new ArrayList<>();
     private List<Figure> figures = new ArrayList<>();
 
     private List<Double> teddyBearTime = new ArrayList<>();
@@ -58,7 +59,7 @@ public class InhibitionControl {
             testL.setText("Start first mini test");
             testL.setOnMouseClicked(event1 -> {
                 anchorP.getChildren().remove(testL);
-                firstMiniTest();
+                macroTest(2, 1, false, true);
             });
         });
 
@@ -66,7 +67,7 @@ public class InhibitionControl {
             testL.setText("Start 2nd mini test");
             testL.setOnMouseClicked(event1 -> {
                 anchorP.getChildren().remove(testL);
-                secondMiniTest();
+                macroTest(6, 2, false, false);
             });
         });
 
@@ -74,7 +75,7 @@ public class InhibitionControl {
             testL.setText("Start third mini test");
             testL.setOnMouseClicked(event1 -> {
                 anchorP.getChildren().remove(testL);
-                thirdMiniTest();
+                macroTest(10, 1, true, true);
             });
         });
 
@@ -82,53 +83,30 @@ public class InhibitionControl {
             testL.setText("Start inhibition test");
             testL.setOnMouseClicked(event1 -> {
                 anchorP.getChildren().remove(testL);
-                inhibitionTest();
+                macroTest(20, 1, true, true);
             });
         });
     }
 
     /**
-     * Runs the first mini test
+     * This method allows to run multiple tests according to the parameters
+     * @param nb_figure total number of figure, split 50/50
+     * @param wait_out_multiplier multiply the delay at the end of the test
+     * @param step show all figures at once or wait @RATE between each figure
+     * @param destruction enable the auto-destruction of a figure @LIFESPAN after the creation
      */
-    private void firstMiniTest() {
-        Task task = new Task<Void>() {
+    private void macroTest(int nb_figure, int wait_out_multiplier, boolean step, boolean destruction){
+        Task task = new Task<Void>(){
             @Override
             public Void call() throws Exception {
-                generateFigures(1, 1);
-                Platform.runLater(() -> {
-                    addFigure();
-                    addFigure();
-                });
-
-                Thread.sleep(WAIT_OUT);
-                resWriter.printResults(teddyBearTime, squaresTime);
-                Platform.runLater(() -> cleanUp());
-                return null;
-            }
-        };
-        Thread th = new Thread(task);
-        th.setDaemon(true);
-        th.start();
-    }
-
-    /**
-     * Runs the second mini test
-     */
-
-    private void secondMiniTest() {
-        Task task = new Task<Void>() {
-            @Override
-            public Void call() throws Exception {
-                int nb_fig = 6;
-                generateFigures(nb_fig / 2, nb_fig / 2);
-                for (int i = 0; i < nb_fig; i++) {
-                    Platform.runLater(() -> addFigure(false));
+                generateFiguresToGenerate(nb_figure/2, nb_figure/2);
+                for(int i = 0; i < nb_figure; i++){
+                    Platform.runLater(() -> addFigure(destruction));
+                    if(step) Thread.sleep(RATE);
                 }
-
-                Thread.sleep(WAIT_OUT * 2);
+                Thread.sleep(WAIT_OUT*wait_out_multiplier);
                 resWriter.printResults(teddyBearTime, squaresTime);
                 Platform.runLater(() -> cleanUp());
-
                 return null;
             }
         };
@@ -137,65 +115,12 @@ public class InhibitionControl {
         th.start();
     }
 
-
-    /**
-     * Runs the third mini test
-     */
-
-    private void thirdMiniTest() {
-        Task task = new Task<Void>() {
-            @Override
-            public Void call() throws Exception {
-                int nb_fig = 6;
-                generateFigures(nb_fig / 2, nb_fig / 2);
-                for (int i = 0; i < nb_fig; i++) {
-                    Platform.runLater(() -> addFigure());
-                    Thread.sleep(RATE);
-                }
-
-                Thread.sleep(WAIT_OUT);
-                resWriter.printResults(teddyBearTime, squaresTime);
-                Platform.runLater(() -> cleanUp());
-
-                return null;
-            }
-        };
-        Thread th = new Thread(task);
-        th.setDaemon(true);
-        th.start();
-    }
-
-
-    /**
-     * Runs the inhibition test
-     */
-    private void inhibitionTest() {
-        Task task = new Task<Void>() {
-            @Override
-            public Void call() throws Exception {
-                int nb_fig = 20;
-                generateFigures(nb_fig / 2, nb_fig / 2);
-                for (int i = 0; i < figures.size() - 1; i++) {
-                    Platform.runLater(() -> addFigure());
-                    Thread.sleep(RATE);
-                }
-
-                Thread.sleep(WAIT_OUT);
-                resWriter.printResults(teddyBearTime, squaresTime);
-                Platform.runLater(() -> cleanUp());
-
-                return null;
-            }
-        };
-        Thread th = new Thread(task);
-        th.setDaemon(true);
-        th.start();
-    }
 
     /**
      * This method make sure there's no conflict between the differents tests
      */
     private void cleanUp() {
+        figuresToGenerate.clear();
         figures.clear();
         index = 0;
 
@@ -210,17 +135,23 @@ public class InhibitionControl {
         squaresTime.clear();
     }
 
-    private void generateFigures(int squares, int stars) {
+    private void generateFiguresToGenerate(int nb_teddy_bears, int nb_stars) {
+        int i;
+        for(i = 0; i < nb_teddy_bears; i++){
+            figuresToGenerate.add(true);
+        }
+        for(i = 0; i < nb_stars; i++){
+            figuresToGenerate.add(false);
+        }
+        Collections.shuffle(figuresToGenerate);
+    }
 
-        for (int i = 0; i < squares; i++) {
+    private void generateFigure(){
+        if(figuresToGenerate.get(index)) {
+            figures.add(new Figure(figureSize(), figureLocation_x(), figureLocation_y(), TEDDYBEAR));
+        } else {
             figures.add(new Figure(figureSize(), figureLocation_x(), figureLocation_y(), SQUARE));
         }
-
-        for (int i = 0; i < stars; i++) {
-            figures.add(new Figure(figureSize(), figureLocation_x(), figureLocation_y(), TEDDYBEAR));
-        }
-
-        Collections.shuffle(figures);
     }
 
     /**
@@ -234,6 +165,7 @@ public class InhibitionControl {
      * Adds a figure to the anchorpane
      */
     private void addFigure(boolean destruction) {
+        generateFigure();
         int indexLocal = index;
 
         ImageView imageView = new ImageView(figures.get(indexLocal).getType());
