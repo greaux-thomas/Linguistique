@@ -1,5 +1,7 @@
 package inhibition;
 
+import java.awt.*;
+
 /**
  * This class represents a figure on the tests
  */
@@ -16,6 +18,23 @@ public class Figure {
         this.location_x = location_x;
         this.location_y = location_y;
         this.type = type;
+    }
+
+    public boolean collide(Figure f){
+        int p1X = (int) (location_x+(size/2));
+        int p1Y = (int) (location_y+(size/2));
+        Point p1 = new Point(p1X, p1Y);
+
+        int p2X = (int) (f.getLocation_x()+(f.getSize()/2));
+        int p2Y = (int) (f.getLocation_y()+(f.getSize()/2));
+        Point p2 = new Point(p2X, p2Y);
+
+        int r = (int) ((size/2) + (f.getSize()/2));
+
+        boolean axis_x = Math.abs(p1.x - p2.x) < r;
+        boolean axis_y = Math.abs(p1.y - p2.y) < r;
+
+        return (axis_x && axis_y);
     }
 
     public long lifespan(){

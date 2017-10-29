@@ -147,18 +147,54 @@ public class InhibitionControl {
     }
 
     private void generateFigure(){
-        if(figuresToGenerate.get(index)) {
-            figures.add(new Figure(figureSize(), figureLocation_x(), figureLocation_y(), TEDDYBEAR));
-        } else {
-            figures.add(new Figure(figureSize(), figureLocation_x(), figureLocation_y(), SQUARE));
-        }
-    }
+        boolean collision = false;
+        double size;
+        double location_x;
+        double location_y;
+        do{
+            collision = false;
+            size = figureSize();
+            location_x = figureLocation_x();
+            location_y = figureLocation_y();
 
-    /**
-     * Adds a figure to the anchorpane
-     */
-    private void addFigure(){
-        addFigure(true);
+            Figure placeholder = new Figure(size, location_x, location_y, "");
+
+
+            if(figures.size() >= 1) {
+                if(placeholder.collide(figures.get(figures.size()-1))){
+                    collision = true;
+                }
+
+                if(figures.size() >= 2) {
+                    if(placeholder.collide(figures.get(figures.size()-2))){
+                        collision = true;
+                    }
+
+                    if(figures.size() >= 3) {
+                        if(placeholder.collide(figures.get(figures.size()-3))){
+                            collision = true;
+                        }
+                        if(figures.size() >= 4) {
+                            if(placeholder.collide(figures.get(figures.size()-4))){
+                                collision = true;
+                            }
+                            if(figures.size() >= 5) {
+                                if(placeholder.collide(figures.get(figures.size()-5))){
+                                    collision = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+        } while (collision);
+
+        if(figuresToGenerate.get(index)) {
+            figures.add(new Figure(size, location_x, location_y, TEDDYBEAR));
+        } else {
+            figures.add(new Figure(size, location_x, location_y, SQUARE));
+        }
     }
 
     /**
